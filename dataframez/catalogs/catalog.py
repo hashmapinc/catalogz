@@ -15,7 +15,7 @@ import os
 import yaml
 from providah.factories.package_factory import PackageFactory as pf
 
-from dataframez.catalogs.interface import Interface
+from dataframez.catalogs.interactors.interface import Interface
 
 
 class Catalog:
@@ -27,10 +27,9 @@ class Catalog:
     __activated = False
 
     @classmethod
-    def read(cls, name: str) -> dict:
-
+    def read(cls, entry_name: str) -> dict:
         cls.__activate()
-        return cls.__registry[name]
+        return cls.__registry.read_asset_configuration(entry_name=entry_name)
 
     @classmethod
     def register(cls, name: str, object_type: str, version: int, asset_configuration: dict) -> bool:
@@ -42,11 +41,13 @@ class Catalog:
         })
 
     @classmethod
-    def validate_write_type(cls, entry_name: str, asset_type: str) -> bool:
+    def validate_entry_type(cls, entry_name: str, asset_type: str) -> bool:
+        cls.__activate()
         return cls.__registry.validate_entry_type(entry_name=entry_name, asset_type=asset_type)
 
     @classmethod
     def latest_version(cls, entry_name: str) -> int:
+        cls.__activate()
         return cls.__registry.get_latest_version(entry_name=entry_name)
 
     @classmethod
@@ -65,7 +66,7 @@ class Catalog:
             }
 
             with open(config_path, 'w') as stream:
-                _ = yaml.dump(cls.__active_catalog, stream)
+                _ = yaml.dump(registry_configuration, stream)
 
         else:
             with open(config_path, 'r') as stream:

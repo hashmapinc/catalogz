@@ -11,14 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import datetime
 import logging
-import os
-
 import pandas as pd
-import yaml
 
-from dataframez.catalog import Catalog
+from dataframez.catalogs.catalog import Catalog
+from dataframez.data_interactors.csv import CSV
 
 
 @pd.api.extensions.register_dataframe_accessor('dataframez')
@@ -52,39 +49,26 @@ class CatalogWriter:
                decimal='.',
                errors='strict') -> None:
 
-        # Load configuration and make sure that this mode is enabled.
-        with open(os.path.join(os.getenv("HOME"),'.dataframez/configuration.yml')) as stream:
-            configuration: dict= [conf for conf in yaml.safe_load(stream)['confs'] if conf['type'] == 'csv_writer']
-
-        if not configuration['allowed']:
-            error_message = 'Writing to CSV is not currently supported'
-            self.__logger.error(error_message)
-            raise PermissionError(error_message)
-
-        # Make sure you aren't trying to create a different version of this data resource with the same asset name using a different kind of persistence
-        if not self.__catalog.validate_write_type(entry_name=register_as, asset_type='csv'):
-            error_message = 'Cannot write asset as type CSV'
-            self.__logger.error(error_message)
-            raise ValueError(error_message)
-
-        # Get the next version number
-        version_number = self.__catalog.latest_version(entry_name=register_as)
-
-        # Create the assets persisted path name.
-        path_or_buf = os.path.join(configuration['path'],
-                                   f'{register_as}/version_{version_number}.csv')
-
-        self._df.to_csv(path_or_buf, sep, na_rep, float_format, columns, header,
-                        index, index_label, mode, encoding, compression, quoting,
-                        quotechar, line_terminator, chunksize, date_format,
-                        doublequote, escapechar, decimal, errors)
-
-        self._catalog.register(name=register_as,
-                               object_type='csv',
-                               version_number = version_number,
-                               asset_configuration={
-                                   'object_name': path_or_buf,
-                               })
+        CSV.write(_df=self._df, entry_name=register_as, **{'register_as': register_as,
+                                                           'sep': sep,
+                                                           'na_rep': na_rep,
+                                                           'float_format': float_format,
+                                                           'columns': columns,
+                                                           'header': header,
+                                                           'index': index,
+                                                           'index_label': index_label,
+                                                           'mode': mode,
+                                                           'encoding': encoding,
+                                                           'compression': compression,
+                                                           'quoting': quoting,
+                                                           'quotechar': quotechar,
+                                                           'line_terminator': line_terminator,
+                                                           'chunksize': chunksize,
+                                                           'date_format': date_format,
+                                                           'doublequote': doublequote,
+                                                           'escapechar': escapechar,
+                                                           'decimal': decimal,
+                                                           })
 
     def to_pickle(self, register_as: str, path: str, compression: str='infer', protocol: int=5):
         pass

@@ -11,18 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import logging
 import pandas as pd
-
 from dataframez.catalogs.catalog import Catalog
 
 
-def read_from_catalog(entry_name: str) -> pd.DataFrame:
-    catalog_entry = Catalog.read_asset_configuration(entry_name=entry_name)
+class Interface:
 
-    if catalog_entry['type'] == 'gcs':
-        args = catalog_entry['access_args']
-        return pd.read_csv('gs://' + args['bucket'] + '/' + args['object'])
+    _catalog = Catalog
+    _logger = logging.getLogger()
 
+    @classmethod
+    def read(cls, entry_name: str, version: int = 1) -> pd.DataFrame:
+        raise NotImplementedError()
 
-pd.from_catalog = read_from_catalog
+    def write(self, _df: pd.DataFrame, entry_name: str, **kwargs):
+        raise NotImplementedError()

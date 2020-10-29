@@ -11,18 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-import pandas as pd
-
-from dataframez.catalogs.catalog import Catalog
-
-
-def read_from_catalog(entry_name: str) -> pd.DataFrame:
-    catalog_entry = Catalog.read_asset_configuration(entry_name=entry_name)
-
-    if catalog_entry['type'] == 'gcs':
-        args = catalog_entry['access_args']
-        return pd.read_csv('gs://' + args['bucket'] + '/' + args['object'])
-
-
-pd.from_catalog = read_from_catalog
