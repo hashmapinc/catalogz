@@ -31,6 +31,7 @@ class Local(Catalog):
             version = self.latest_version(entry_name=entry_name)
 
         entries = self._catalog.get(entry_name)
+        print(self._catalog)
         print(self._catalog.keys())
         print(f'{entry_name} \n Entries: {entries}')
         entry = [entry for entry in entries['versions'] if entry['number'] == version][0]
