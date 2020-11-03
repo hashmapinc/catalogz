@@ -12,35 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import logging
+import pandas as pd
+import os
+import yaml
+from providah.factories.package_factory import PackageFactory as pf
+
+from dataframez.catalogs.catalog import Catalog
 
 
-class Interface:
-
-    _catalog: dict = None
+class IO:
     _logger = logging.getLogger()
-    _catalog_in_memory: bool = False
+    __configuration_path: str = os.path.join(os.getenv("HOME"), '.dataframez/configuration.yml')
 
     def __init__(self, **kwargs):
-        pass
+        with open(self.__configuration_path, 'r') as stream:
+            configuration = yaml.safe_load(stream)['configurations']['catalog']
+        self._catalog: Catalog = pf.create(key=configuration['type'],
+                                           configuration=configuration['conf'])
 
-    def register(self, entry_name: str, object_type: str, args: dict, **kwargs) -> None:
+    def read(self, asset_info: dict, **kwargs) -> pd.DataFrame:
         raise NotImplementedError()
 
-    def read_asset_configuration(self, entry_name: str, version: int = 1) -> dict:
-        raise NotImplementedError
-
-    def validate_entry_type(self, entry_name: str, asset_type: str) -> bool:
-        raise NotImplementedError()
-
-    def get_latest_version(self, entry_name):
-        raise NotImplementedError()
-
-    # ----------- Protected Methods Below ------------- #
-
-    def _check_if_registered(self, entry_name: str) -> bool:
-        if self._catalog.get(entry_name):
-            return True
-        return False
-
-    def _load_catalog(self) -> None:
+    def write(self, _df: pd.DataFrame, entry_name: str, **kwargs):
         raise NotImplementedError()

@@ -11,19 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import logging
-import pandas as pd
-from dataframez.catalogs.catalog import Catalog
 
-
-class Interface:
-
-    _catalog = Catalog
-    _logger = logging.getLogger()
-
-    @classmethod
-    def read(cls, entry_name: str, version: int = 1) -> pd.DataFrame:
-        raise NotImplementedError()
-
-    def write(self, _df: pd.DataFrame, entry_name: str, **kwargs):
-        raise NotImplementedError()
+include:
+  - local: python.gitlab-ci.yml

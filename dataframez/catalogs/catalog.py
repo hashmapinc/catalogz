@@ -11,68 +11,41 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import logging
 import os
 import yaml
 from providah.factories.package_factory import PackageFactory as pf
 
-from dataframez.catalogs.interactors.interface import Interface
-
 
 class Catalog:
+    _logger = logging.getLogger()
+    _catalog: dict
 
-    # This is an interface to the specific kind of catalog.
-    __registry: Interface = None
+    def __init__(self, **kwargs):
 
-    # Identifies when the catalog interface has been set - single pattern
-    __activated = False
+        # Create logger instance
+        # self._catalog = None
+        self._load_catalog()
 
-    @classmethod
-    def read(cls, entry_name: str) -> dict:
-        cls.__activate()
-        return cls.__registry.read_asset_configuration(entry_name=entry_name)
+    def read(self, entry_name: str, version: int = 1) -> dict:
+        raise NotImplementedError()
 
-    @classmethod
-    def register(cls, name: str, object_type: str, version: int, asset_configuration: dict) -> bool:
-        cls.__activate()
-        cls.__registry.register(entry_name=name,**{
-            'type': object_type,
-            'version': version,
-            'asset_configuration': asset_configuration,
-        })
+    def register(self, entry_name: str, object_type: str, version: int, asset_configuration: dict) -> bool:
+        raise NotImplementedError()
 
-    @classmethod
-    def validate_entry_type(cls, entry_name: str, asset_type: str) -> bool:
-        cls.__activate()
-        return cls.__registry.validate_entry_type(entry_name=entry_name, asset_type=asset_type)
+    def validate_entry_type(self, entry_name: str, asset_type: str) -> bool:
+        raise NotImplementedError()
 
-    @classmethod
-    def latest_version(cls, entry_name: str) -> int:
-        cls.__activate()
-        return cls.__registry.get_latest_version(entry_name=entry_name)
+    def latest_version(self, entry_name: str) -> int:
+        raise NotImplementedError()
 
-    @classmethod
-    def __activate(cls):
+    # ----------- Protected Methods Below ------------- #
 
-        config_path = os.path.join(os.getenv("HOME"), ".dataframez/config.yml")
-        if not os.path.exists(config_path):
-            catalog_location = os.path.join(os.getenv("HOME"), ".dataframez")
-            os.mkdir(catalog_location)
-            registry_configuration = {
-                'type': 'local',
-                'conf': {
-                    'location': catalog_location,
-                    'name': 'default.dfz'
-                },
-            }
+    def _check_if_registered(self, entry_name: str) -> bool:
+        raise NotImplementedError()
 
-            with open(config_path, 'w') as stream:
-                _ = yaml.dump(registry_configuration, stream)
+    def _load_catalog(self) -> None:
+        raise NotImplementedError()
 
-        else:
-            with open(config_path, 'r') as stream:
-                registry_configuration = yaml.safe_load(stream)
-
-        cls.__registry = pf.create(key=registry_configuration['type'],
-                                   configuration=registry_configuration['conf'])
-
-        cls.__activated = True
+    def _update_catalog(self):
+        raise NotImplementedError()

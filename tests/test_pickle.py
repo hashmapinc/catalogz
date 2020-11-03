@@ -11,22 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from unittest import TestCase
+import pandas as pd
+import dataframez
 
-version: 1
 
-configurations:
-  - name: catalog
-    type: local
-    conf:
-      location: $HOME/.dataframez
-      name: default_catalog
-  - name: csv_writer
-    type: csv_writer
-    conf:
-      path: $HOME/dataframez
-      allowed: true
-  - name: parquet_writer
-    type: parquet_writer
-    conf:
-      path: $HOME/dataframez
-      allowed: true
+class TestWriteCSV(TestCase):
+
+    def test_write(self):
+
+        df = pd.DataFrame.from_dict({'a': [1, 2, 3], 'b': [2, 3, 5]})
+
+        df.dataframez.to_csv(register_as='test_data_pickle')
+
+        df2 = pd.from_catalog(entry_name='test_data_pickle')
+        print(df2)

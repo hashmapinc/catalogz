@@ -27,12 +27,14 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/hashmapinc/dataframez",
     packages=setuptools.find_packages(),
-    package_data={},
+    package_data={
+        "dataframez.configurations": ["default_config.yml"],
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Development Status :: 4 - Beta",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
 )

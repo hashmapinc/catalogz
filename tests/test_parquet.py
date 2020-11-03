@@ -11,11 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from unittest import TestCase
 import pandas as pd
 import dataframez
 
-# if __name__ == '__main__':
-#
-#     df = pd.from_catalog(name='titanic_training')
-#
-#     df.dataframez.to_csv(register_as='asdf')
+
+class TestCSV(TestCase):
+
+    def test_write(self):
+
+        df = pd.DataFrame.from_dict({'a': [1, 2, 3], 'b': [2, 3, 5]})
+
+        df.dataframez.to_parquet(register_as='test_data_parquet')
+
+        df2 = pd.from_catalog(entry_name='test_data_parquet')
+        print(df2)

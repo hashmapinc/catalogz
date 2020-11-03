@@ -17,48 +17,25 @@ import pandas as pd
 from dataframez.data_interactors.io import IO
 
 
-class CSV(IO):
+class Parquet(IO):
+
+    __default_read_values = {
+        'path': None,
+        'engine': 'auto',
+        'columns': None
+    }
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.__path = os.path.expandvars(kwargs.get('path'))
+        self.__path = kwargs.get('path')
 
     # ---------- Reading Capabilities ---------- #
     def read(self, asset_info: dict, **kwargs) -> pd.DataFrame:
-
         write_config: dict = asset_info['config']
 
-        # Map read parameters
-        # read_inputs = self.__default_read_values.copy()
-        # read_inputs = self._map_write_to_read_params(write_params=write_config, read_params=read_inputs)
-
         # Read to DataFrame and return
-        kwargs['filepath_or_buffer'] = write_config['path_or_buf']
+        kwargs['path'] = write_config['path']
         return pd.read_csv(**kwargs)
-
-    # def _map_write_to_read_params(self, write_params, read_params):
-    #     read_params['filepath_or_buffer'] = write_params['path_or_buf']
-    #
-    #     if 'sep' in write_params.keys():
-    #         read_params['sep'] = write_params['sep']
-    #
-    #     if 'na_rep' in write_params.keys():
-    #         read_params['na_values'] = write_params['na_rep']
-    #
-    #     if 'columns' in write_params.keys():
-    #         read_params['usecols'] = write_params['columns']
-    #
-    #     if 'header' in write_params.keys():
-    #         if write_params['header'] and not isinstance(write_params['header'], bool):
-    #             read_params['names'] = write_params['header']
-    #
-    #     if 'index' in read_params.keys() and read_params['index']:
-    #         if 'index_label' in read_params.keys():
-    #             read_params['index_col'] = write_params['index_label']
-    #         else:
-    #             read_params['index_col'] = True
-    #
-    #     return read_params
 
     # ---------- Reading Capabilities ---------- #
     def write(self, _df: pd.DataFrame, entry_name: str, **kwargs):
@@ -73,16 +50,11 @@ class CSV(IO):
         version_number = self._catalog.latest_version(entry_name=entry_name) + 1
 
         # Create the assets persisted path name.
-        kwargs['path_or_buf'] = os.path.join(self.__path,
-                                             f'{entry_name}/version_{version_number}.csv')
-
-        if not os.path.exists(os.path.dirname(kwargs['path_or_buf'])):
-            os.mkdir(os.path.dirname(kwargs['path_or_buf']))
-
-        kwargs.pop('register_as')
+        kwargs['path'] = os.path.join(self.__path,
+                                      f'{entry_name}/version_{version_number}.parquet')
 
         # Write the data to teh specified target
-        _df.to_csv(**kwargs)
+        _df.to_parquet(**kwargs)
 
         # Update the catalog entry.
         self._catalog.register(entry_name=entry_name,
