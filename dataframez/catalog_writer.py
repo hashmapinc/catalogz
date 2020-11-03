@@ -98,7 +98,7 @@ class CatalogWriter:
                                                                        'decimal': decimal,
                                                                        'errors': errors})
 
-    def to_pickle(self, register_as: str, compression: str = 'infer', protocol: int = 5):
+    def to_pickle(self, register_as: str, compression: str = 'infer', protocol: int = -1):
         if 'parquet' not in self.__writers.keys():
             raise ValueError('to_parquet not supported with the current configuration. Please check your configuration or speak to your system administrator '
                              'if you believe that this is may be in error.')
