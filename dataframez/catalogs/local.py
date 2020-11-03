@@ -80,6 +80,9 @@ class Local(Catalog):
                 ]
             }
 
+        print(entry_name)
+        print(f'Catalog: {self._catalog}')
+
         self._update_catalog()
 
     def validate_entry_type(self, entry_name: str, asset_type: str) -> bool:
