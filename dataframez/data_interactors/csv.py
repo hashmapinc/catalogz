@@ -45,11 +45,13 @@ class CSV(IO):
         version_number = self._catalog.latest_version(entry_name=entry_name) + 1
 
         # Create the assets persisted path name.
-        kwargs['path_or_buf'] = os.path.join(self.__path,
-                                             f'{entry_name}/version_{version_number}.csv')
+        output_filepath = os.path.join(self.__path,
+                                       f'{entry_name}/version_{version_number}.csv')
 
-        if not os.path.exists(os.path.dirname(kwargs['path_or_buf'])):
-            os.mkdir(os.path.dirname(kwargs['path_or_buf']))
+        if not os.path.exists(os.path.dirname(output_filepath)):
+            os.mkdir(os.path.dirname(output_filepath))
+
+        kwargs['path_or_buf'] = output_filepath
 
         # Write the data to teh specified target
         _df.to_csv(**kwargs)
