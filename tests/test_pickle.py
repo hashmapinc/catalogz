@@ -16,13 +16,13 @@ import pandas as pd
 import dataframez
 
 
-class TestWriteCSV(TestCase):
+class TestWritePickle(TestCase):
 
     def test_write(self):
 
         df = pd.DataFrame.from_dict({'a': [1, 2, 3], 'b': [2, 3, 5]})
 
-        df.dataframez.to_csv(register_as='test_data_pickle')
+        df.dataframez.to_pickle(register_as='test_data_pickle')
 
         df2 = pd.from_catalog(entry_name='test_data_pickle')
         print(df2)

@@ -31,3 +31,8 @@ configurations:
       conf:
         path: $HOME/.dataframez
         allowed: true
+    pickle:
+      type: pickle
+      conf:
+        path: $HOME/.dataframez
+        allowed: true

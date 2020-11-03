@@ -21,7 +21,7 @@ class Pickle(IO):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.__path = kwargs.get('path')
+        self.__path = os.path.expandvars(kwargs.get('path'))
 
     # ---------- Reading Capabilities ---------- #
     def read(self, asset_info: dict, **kwargs) -> pd.DataFrame:
@@ -29,7 +29,7 @@ class Pickle(IO):
 
         # Read to DataFrame and return
         kwargs['filepath_or_buffer'] = write_config['path']
-        return pd.pickle(**kwargs)
+        return pd.read_pickle(**kwargs)
 
     # ---------- Reading Capabilities ---------- #
     def write(self, _df: pd.DataFrame, entry_name: str, **kwargs):
@@ -44,8 +44,13 @@ class Pickle(IO):
         version_number = self._catalog.latest_version(entry_name=entry_name) + 1
 
         # Create the assets persisted path name.
-        kwargs['path'] = os.path.join(self.__path,
-                                      f'{entry_name}/version_{version_number}.pickle')
+        output_filepath = os.path.join(self.__path,
+                                       f'{entry_name}/version_{version_number}.pickle')
+
+        if not os.path.exists(os.path.dirname(output_filepath)):
+            os.mkdir(os.path.dirname(output_filepath))
+
+        kwargs['path'] = output_filepath
 
         # Write the data to teh specified target
         _df.to_pickle(**kwargs)

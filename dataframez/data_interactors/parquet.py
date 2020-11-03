@@ -42,7 +42,7 @@ class Parquet(IO):
 
         # Make sure you aren't trying to create a different version of this data resource with the same asset name using a different kind of persistence
         if not self._catalog.validate_entry_type(entry_name=entry_name, asset_type='parquet'):
-            error_message = 'Cannot write asset as type CSV'
+            error_message = 'Cannot write asset as type PARQUET'
             self._logger.error(error_message)
             raise ValueError(error_message)
 
