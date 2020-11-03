@@ -27,7 +27,7 @@ class Parquet(IO):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.__path = kwargs.get('path')
+        self.__path = os.path.expandvars(kwargs.get('path'))
 
     # ---------- Reading Capabilities ---------- #
     def read(self, asset_info: dict, **kwargs) -> pd.DataFrame:
@@ -35,13 +35,13 @@ class Parquet(IO):
 
         # Read to DataFrame and return
         kwargs['path'] = write_config['path']
-        return pd.read_csv(**kwargs)
+        return pd.read_parquet(**kwargs)
 
     # ---------- Reading Capabilities ---------- #
     def write(self, _df: pd.DataFrame, entry_name: str, **kwargs):
 
         # Make sure you aren't trying to create a different version of this data resource with the same asset name using a different kind of persistence
-        if not self._catalog.validate_entry_type(entry_name=entry_name, asset_type='csv'):
+        if not self._catalog.validate_entry_type(entry_name=entry_name, asset_type='parquet'):
             error_message = 'Cannot write asset as type CSV'
             self._logger.error(error_message)
             raise ValueError(error_message)
@@ -50,14 +50,19 @@ class Parquet(IO):
         version_number = self._catalog.latest_version(entry_name=entry_name) + 1
 
         # Create the assets persisted path name.
-        kwargs['path'] = os.path.join(self.__path,
-                                      f'{entry_name}/version_{version_number}.parquet')
+        output_filepath = os.path.join(self.__path,
+                                       f'{entry_name}/version_{version_number}')
+
+        if not os.path.exists(os.path.dirname(output_filepath)):
+            os.mkdir(os.path.dirname(output_filepath))
+
+        kwargs['path'] = output_filepath
 
         # Write the data to teh specified target
         _df.to_parquet(**kwargs)
 
         # Update the catalog entry.
         self._catalog.register(entry_name=entry_name,
-                               object_type='csv',
+                               object_type='parquet',
                                version=version_number,
                                asset_configuration=kwargs)

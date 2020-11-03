@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import yaml
-import dataframez.read_from_catalog
 from dataframez.read_from_catalog import __read_from_catalog
 import dataframez.catalog_writer
 import os

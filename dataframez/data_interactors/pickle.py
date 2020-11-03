@@ -35,7 +35,7 @@ class Pickle(IO):
     def write(self, _df: pd.DataFrame, entry_name: str, **kwargs):
 
         # Make sure you aren't trying to create a different version of this data resource with the same asset name using a different kind of persistence
-        if not self._catalog.validate_entry_type(entry_name=entry_name, asset_type='csv'):
+        if not self._catalog.validate_entry_type(entry_name=entry_name, asset_type='pickle'):
             error_message = 'Cannot write asset as type CSV'
             self._logger.error(error_message)
             raise ValueError(error_message)
@@ -52,6 +52,6 @@ class Pickle(IO):
 
         # Update the catalog entry.
         self._catalog.register(entry_name=entry_name,
-                               object_type='csv',
+                               object_type='pickle',
                                version=version_number,
                                asset_configuration=kwargs)

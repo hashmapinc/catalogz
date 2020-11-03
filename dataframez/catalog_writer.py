@@ -78,32 +78,41 @@ class CatalogWriter:
             raise PermissionError('to_csv not supported with the current configuration. Please check your configuration or speak to your system administrator '
                                   'if you believe that this is may be in error.')
 
-        self.__writers['csv'](_df=self._df, entry_name=register_as, **{'register_as': register_as,
-                                                                       'sep': sep,
-                                                                        'na_rep': na_rep,
-                                                                        'float_format': float_format,
-                                                                        'columns': columns,
-                                                                        'header': header,
-                                                                        'index': index,
-                                                                        'index_label': index_label,
-                                                                        'mode': mode,
-                                                                        'encoding': encoding,
-                                                                        'compression': compression,
-                                                                        'quoting': quoting,
-                                                                        'quotechar': quotechar,
-                                                                        'line_terminator': line_terminator,
-                                                                        'chunksize': chunksize,
-                                                                        'date_format': date_format,
-                                                                        'doublequote': doublequote,
-                                                                        'escapechar': escapechar,
-                                                                        'decimal': decimal,
-                                                                        'errors': errors})
+        self.__writers['csv'](_df=self._df, entry_name=register_as, **{'sep': sep,
+                                                                       'na_rep': na_rep,
+                                                                       'float_format': float_format,
+                                                                       'columns': columns,
+                                                                       'header': header,
+                                                                       'index': index,
+                                                                       'index_label': index_label,
+                                                                       'mode': mode,
+                                                                       'encoding': encoding,
+                                                                       'compression': compression,
+                                                                       'quoting': quoting,
+                                                                       'quotechar': quotechar,
+                                                                       'line_terminator': line_terminator,
+                                                                       'chunksize': chunksize,
+                                                                       'date_format': date_format,
+                                                                       'doublequote': doublequote,
+                                                                       'escapechar': escapechar,
+                                                                       'decimal': decimal,
+                                                                       'errors': errors})
 
     def to_pickle(self, register_as: str, compression: str = 'infer', protocol: int = 5):
         if 'parquet' not in self.__writers.keys():
             raise ValueError('to_parquet not supported with the current configuration. Please check your configuration or speak to your system administrator '
                              'if you believe that this is may be in error.')
 
-        self.__writers['parquet'](_df=self._df, entry_name=register_as, **{'register_as': register_as,
-                                                                           'compression': compression,
-                                                                           'protocol': protocol})
+        self.__writers['pickle'](_df=self._df, entry_name=register_as, **{'compression': compression,
+                                                                          'protocol': protocol})
+
+    def to_parquet(self, register_as: str, engine='auto', compression='snappy', index=None, **kwargs):
+
+        if 'parquet' not in self.__writers.keys():
+            raise ValueError('to_parquet not supported with the current configuration. Please check your configuration or speak to your system administrator '
+                             'if you believe that this is may be in error.')
+
+        self.__writers['parquet'](_df=self._df, entry_name=register_as, **{'compression': compression,
+                                                                           'engine': engine,
+                                                                           'index': index,
+                                                                           **kwargs})

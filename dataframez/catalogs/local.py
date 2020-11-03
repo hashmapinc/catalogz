@@ -70,11 +70,13 @@ class Local(Catalog):
         else:
             self._catalog[entry_name] = {
                 'type': object_type,
-                'versions': {
-                    'number': version,
-                    'asset_configuration': asset_configuration,
-                    'create_timestamp': datetime.datetime.timestamp(datetime.datetime.utcnow())
-                }
+                'versions': [
+                    {
+                        'number': version,
+                        'asset_configuration': asset_configuration,
+                        'create_timestamp': datetime.datetime.timestamp(datetime.datetime.utcnow())
+                    }
+                ]
             }
 
         self._update_catalog()
