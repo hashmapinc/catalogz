@@ -23,8 +23,6 @@ class Catalog:
 
     def __init__(self, **kwargs):
 
-        # Create logger instance
-        # self._catalog = None
         self._load_catalog()
 
     def read(self, entry_name: str, version: int = 1) -> dict:

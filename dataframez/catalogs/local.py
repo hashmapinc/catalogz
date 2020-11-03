@@ -26,14 +26,12 @@ class Local(Catalog):
         super().__init__(**kwargs)
 
     def read(self, entry_name: str, version: int = 0) -> dict:
+        self._load_catalog()
 
         if version == 0:
             version = self.latest_version(entry_name=entry_name)
 
         entries = self._catalog.get(entry_name)
-        print(self._catalog)
-        print(self._catalog.keys())
-        print(f'{entry_name} \n Entries: {entries}')
         entry = [entry for entry in entries['versions'] if entry['number'] == version][0]
 
         if not entry:
@@ -56,6 +54,8 @@ class Local(Catalog):
         return 0
 
     def register(self, entry_name: str, object_type: str, version: int, asset_configuration: dict) -> bool:
+
+        self._load_catalog()
 
         if self._check_if_registered(entry_name=entry_name):
             self._logger.info(f'Entry {entry_name} already exists. Creating a new version of the entry.')
@@ -82,10 +82,8 @@ class Local(Catalog):
                 ]
             }
 
-        print(entry_name)
-        print(f'Catalog: {self._catalog}')
-
         self._update_catalog()
+        self._load_catalog()
 
     def validate_entry_type(self, entry_name: str, asset_type: str) -> bool:
         if self._check_if_registered(entry_name=entry_name):
