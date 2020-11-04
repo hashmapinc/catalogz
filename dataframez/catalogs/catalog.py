@@ -23,7 +23,7 @@ class Catalog:
     # catalog is stored - in memory (at this time) - as a dictionary
     _catalog: dict
 
-    def __init__(self, **kwargs):
+    def __init__(self):
         # Regardless of class, the in-memory component must be loaded.
         self._load_catalog()
 

@@ -85,7 +85,7 @@ class Local(Catalog):
         self._load_catalog()
 
         if self._check_if_registered(entry_name=entry_name):
-            self._logger.info(f'Entry {entry_name} already exists. Creating a new version of the entry.')
+            self._logger.info('Entry % already exists. Creating a new version of the entry.', entry_name)
             versions = self._catalog[entry_name]['versions']
             if isinstance(versions, dict):
                 versions = [versions]

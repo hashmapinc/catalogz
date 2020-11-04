@@ -20,6 +20,8 @@ from providah.factories.package_factory import PackageFactory as pf
 from dataframez.catalogs.catalog import Catalog
 
 
+# pylint: disable=too-many-arguments
+
 class IO:
     """Base class for IO operations for data persistence."""
     _logger = logging.getLogger()

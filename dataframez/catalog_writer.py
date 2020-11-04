@@ -18,6 +18,9 @@ import pandas as pd
 import yaml
 
 
+# pylint: disable=too-many-arguments
+# pylint: disable=too-many-locals
+
 @pd.api.extensions.register_dataframe_accessor('dataframez')
 class CatalogWriter:
     """Extends pandas DataFrame to write to a cataloged persistent storage."""

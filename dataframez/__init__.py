@@ -13,7 +13,6 @@
 # limitations under the License.
 import yaml
 from dataframez.read_from_catalog import __read_from_catalog
-import dataframez.catalog_writer
 import os
 import pandas as pd
 import providah.factories.package_factory as pf
