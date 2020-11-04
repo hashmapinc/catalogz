@@ -12,23 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import logging
-import os
-import yaml
-from providah.factories.package_factory import PackageFactory as pf
 
 
 class Catalog:
+    """Base class for all Catalog types. Catalog types are abstractions that abstract the interactions with a 'data catalog.'"""
+
+    # instance of python logger
     _logger = logging.getLogger()
+
+    # catalog is stored - in memory (at this time) - as a dictionary
     _catalog: dict
 
     def __init__(self, **kwargs):
-
+        # Regardless of class, the in-memory component must be loaded.
         self._load_catalog()
 
     def read(self, entry_name: str, version: int = 1) -> dict:
         raise NotImplementedError()
 
-    def register(self, entry_name: str, object_type: str, version: int, asset_configuration: dict) -> bool:
+    def register(self, entry_name: str, object_type: str, version: int, asset_configuration: dict) -> None:
         raise NotImplementedError()
 
     def validate_entry_type(self, entry_name: str, asset_type: str) -> bool:

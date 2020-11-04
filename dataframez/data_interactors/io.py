@@ -21,6 +21,7 @@ from dataframez.catalogs.catalog import Catalog
 
 
 class IO:
+    """Base class for IO operations for data persistence."""
     _logger = logging.getLogger()
     __configuration_path: str = os.path.join(os.getenv("HOME"), '.dataframez/configuration.yml')
 

@@ -25,4 +25,5 @@ class TestWritePickle(TestCase):
         df.dataframez.to_pickle(register_as='test_data_pickle')
 
         df2 = pd.from_catalog(entry_name='test_data_pickle')
-        print(df2)
+
+        self.assertDictEqual(df.to_dict(), df2.to_dict())

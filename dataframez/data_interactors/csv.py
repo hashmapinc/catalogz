@@ -25,15 +25,36 @@ class CSV(IO):
 
     # ---------- Reading Capabilities ---------- #
     def read(self, asset_info: dict, **kwargs) -> pd.DataFrame:
+        """
+        Read csv persisted data given information from the data catalog.
+        Args:
+            asset_info: cataloged asset information.
+            **kwargs: Additional parameters
+
+        Returns: pandas DataFrame
+
+        """
+
+        if 'index_col' not in kwargs.keys():
+            kwargs['index_col'] = 0
 
         write_config: dict = asset_info['config']
 
         # Read to DataFrame and return
         kwargs['filepath_or_buffer'] = write_config['path_or_buf']
+        print(kwargs)
         return pd.read_csv(**kwargs)
 
     # ---------- Reading Capabilities ---------- #
     def write(self, _df: pd.DataFrame, entry_name: str, **kwargs):
+        """
+        Write data persistence layer and register to data catalog.
+        Args:
+            _df: DataFrame to write to persistence layer
+            entry_name: Name of entry in catalog to attach persisted data to.
+            **kwargs: Additional inputs to data persistence
+
+        """
 
         # Make sure you aren't trying to create a different version of this data resource with the same asset name using a different kind of persistence
         if not self._catalog.validate_entry_type(entry_name=entry_name, asset_type='csv'):

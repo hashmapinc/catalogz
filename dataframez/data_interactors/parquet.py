@@ -31,6 +31,15 @@ class Parquet(IO):
 
     # ---------- Reading Capabilities ---------- #
     def read(self, asset_info: dict, **kwargs) -> pd.DataFrame:
+        """
+        Read parquet persisted data given information from the data catalog.
+        Args:
+            asset_info: cataloged asset information.
+            **kwargs: Additional parameters
+
+        Returns: pandas DataFrame
+
+        """
         write_config: dict = asset_info['config']
 
         # Read to DataFrame and return
@@ -38,8 +47,15 @@ class Parquet(IO):
         return pd.read_parquet(**kwargs)
 
     # ---------- Reading Capabilities ---------- #
-    def write(self, _df: pd.DataFrame, entry_name: str, **kwargs):
+    def write(self, _df: pd.DataFrame, entry_name: str, **kwargs) -> None:
+        """
+        Write data persistence layer and register to data catalog.
+        Args:
+            _df: DataFrame to write to persistence layer
+            entry_name: Name of entry in catalog to attach persisted data to.
+            **kwargs: Additional inputs to data persistence
 
+        """
         # Make sure you aren't trying to create a different version of this data resource with the same asset name using a different kind of persistence
         if not self._catalog.validate_entry_type(entry_name=entry_name, asset_type='parquet'):
             error_message = 'Cannot write asset as type PARQUET'

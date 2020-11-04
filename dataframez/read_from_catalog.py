@@ -22,10 +22,16 @@ from dataframez.catalogs.catalog import Catalog
 
 
 class __CatalogReader:
+    """Class to help manage and hide reading data from the data catalog."""
+    # Catalog abstraction instance
     __catalog: Catalog
+    # True once initialized (configured)
     __initialized = False
+    # Reader methods that have been allowed
     __readers: dict = {}
+    # Application logger instance
     __logger = logging.getLogger()
+    # Path to configuration file.
     __configuration_path: str = os.path.join(os.getenv("HOME"), '.dataframez/configuration.yml')
 
     @classmethod
@@ -33,12 +39,21 @@ class __CatalogReader:
 
         if not cls.__initialized:
             cls.__configure_catalog()
-            cls.__configure_writer_methods()
+            cls.__configure_reader_methods()
         cls.__initialized = True
 
     @classmethod
     def read(cls, entry_name: str, version: int = 0, **kwargs) -> pd.DataFrame:
+        """
+        Read from data catalog given the data asset catalog name and the version.
+        Args:
+            entry_name: Name of data catalog entry
+            version: Version of data asset
+            **kwargs:
 
+        Returns:
+
+        """
         cls.__initialize()
         asset_info = cls.__catalog.read(entry_name=entry_name,
                                         version=version)
@@ -47,18 +62,19 @@ class __CatalogReader:
                                                  **kwargs)
 
     @classmethod
-    def __configure_catalog(self) -> None:
+    def __configure_catalog(cls) -> None:
+        """Constructor method that calls factory to create catalog instance."""
         # When a configuration already exists, load it
-        with open(self.__configuration_path, 'r') as stream:
+        with open(cls.__configuration_path, 'r') as stream:
             registry_configuration = yaml.safe_load(stream)['configurations']['catalog']
 
         # Load the configuration
-        self.__catalog = pf.create(key=registry_configuration['type'],
-                                   configuration=registry_configuration['conf'])
+        cls.__catalog = pf.create(key=registry_configuration['type'],
+                                  configuration=registry_configuration['conf'])
 
     @classmethod
-    def __configure_writer_methods(cls):
-
+    def __configure_reader_methods(cls):
+        """Constructor method to populate allowed reader methods"""
         # ----------- create local registry of all writers ---------- #
         # Load configuration
         with open(cls.__configuration_path, 'r') as config_stream:

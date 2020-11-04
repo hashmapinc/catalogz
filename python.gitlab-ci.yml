@@ -24,7 +24,7 @@ test:
     - pip install -r requirements.txt
     - pip install nose2 coverage prospector
     - nose2 tests
-#    - prospector
+    - prospector
     - coverage run -m nose2 && coverage report -m
 #    - bash <(curl -s https://codecov.io/bash)
 

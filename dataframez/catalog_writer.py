@@ -20,6 +20,7 @@ import yaml
 
 @pd.api.extensions.register_dataframe_accessor('dataframez')
 class CatalogWriter:
+    """Extends pandas DataFrame to write to a cataloged persistent storage."""
     __logger = logging.getLogger()
     __configuration_path: str = os.path.join(os.getenv("HOME"), '.dataframez/configuration.yml')
     __writers: dict = {}
@@ -30,7 +31,7 @@ class CatalogWriter:
         self.__configure_catalog()
 
     def __configure_catalog(self) -> None:
-
+        """Constructor method that calls factory to create catalog instance."""
         # When a configuration already exists, load it
         with open(self.__configuration_path, 'r') as stream:
             registry_configuration = yaml.safe_load(stream)['configurations']['catalog']
@@ -40,7 +41,7 @@ class CatalogWriter:
                                    configuration=registry_configuration['conf'])
 
     def __configure_writer_methods(self):
-
+        """Constructor method to populate allowed writer methods"""
         # ----------- create local registry of all writers ---------- #
         # Load configuration
         with open(self.__configuration_path, 'r') as config_stream:
@@ -73,6 +74,33 @@ class CatalogWriter:
                escapechar=None,
                decimal='.',
                errors='strict') -> None:
+        """
+        Write CSV to persistence layer dictated by configuration and asset name.
+        Args:
+            register_as: Name of asset in catalog.
+            sep:
+            na_rep:
+            float_format:
+            columns:
+            header:
+            index:
+            index_label:
+            mode:
+            encoding:
+            compression:
+            quoting:
+            quotechar:
+            line_terminator:
+            chunksize:
+            date_format:
+            doublequote:
+            escapechar:
+            decimal:
+            errors:
+
+        Returns:
+
+        """
 
         if 'csv' not in self.__writers.keys():
             raise PermissionError('to_csv not supported with the current configuration. Please check your configuration or speak to your system administrator '
@@ -98,19 +126,38 @@ class CatalogWriter:
                                                                        'decimal': decimal,
                                                                        'errors': errors})
 
-    def to_pickle(self, register_as: str, compression: str = 'infer', protocol: int = -1):
+    def to_pickle(self, register_as: str, compression: str = 'infer', protocol: int = -1) -> None:
+        """
+        Write Pickle to persistence layer dictated by configuration and asset name.
+        Args:
+            register_as: Name of asset in catalog.
+            compression:
+            protocol:
+
+        """
         if 'parquet' not in self.__writers.keys():
-            raise ValueError('to_parquet not supported with the current configuration. Please check your configuration or speak to your system administrator '
-                             'if you believe that this is may be in error.')
+            raise PermissionError('to_parquet not supported with the current configuration. Please check your configuration or speak to your system '
+                                  'administrator if you believe that this is may be in error.')
 
         self.__writers['pickle'](_df=self._df, entry_name=register_as, **{'compression': compression,
                                                                           'protocol': protocol})
 
     def to_parquet(self, register_as: str, engine='auto', compression='snappy', index=None, **kwargs):
+        """
+        Write Parquet to persistence layer dictated by configuration and asset name.
+        Args:
+            register_as: Name of asset in catalog.
+            engine:
+            compression:
+            index:
+            **kwargs:
 
+        Returns:
+
+        """
         if 'parquet' not in self.__writers.keys():
-            raise ValueError('to_parquet not supported with the current configuration. Please check your configuration or speak to your system administrator '
-                             'if you believe that this is may be in error.')
+            raise PermissionError('to_parquet not supported with the current configuration. Please check your configuration or speak to your system '
+                                  'administrator if you believe that this is may be in error.')
 
         self.__writers['parquet'](_df=self._df, entry_name=register_as, **{'compression': compression,
                                                                            'engine': engine,

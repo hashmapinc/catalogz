@@ -25,4 +25,5 @@ class TestCSV(TestCase):
         df.dataframez.to_parquet(register_as='test_data_parquet')
 
         df2 = pd.from_catalog(entry_name='test_data_parquet')
-        print(df2)
+
+        self.assertDictEqual(df.to_dict(), df2.to_dict())
