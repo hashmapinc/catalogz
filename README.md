@@ -22,8 +22,63 @@ A named data source is a source where the name can be used to retrieve the data 
 In modern environment a data catalog is often used to track data assets. But interacting with these catalogs is also bothersome. The use of a named asset abstracts the interface with such catalogs by providing all the necessary interactions with this 'catalog' to identify and retrieve teh data. Cataloging in this sense can also mean a data versioning utility. In gereal, however, this means that the catalog interactions of dataframez can work across many catalogs in tandem; that is, with enterprise catalog and data scientist catalogs at the same time. 
 
 ##About
-Description + Intent
-Configuration
+dataframez is pandas wrapper designed to provide an abstraction between a data catalog, or catalog for short, and the users standard interaction with pandas.
+
+**Intent**
+
+The purpose for the catalog is two fold.
+1. To abstract away the need to know where data is being stored and to simplify reading without having to necessarily know what kind of data you are reading.
+2. Enable enterprise governance controls to mandate where data is stored, what kind of data persistence is allowed. They will also work with IT to make sure the correct interface is available if it does not currently exist.
+
+**Configuration**
+
+Configuration will identify what kind of catalog is being used (name of catalog class - preferably lowercase). It will also identify for each type of persistence where the data will be persisted (or other appropriate abstraction) and whether a specific kind of persistence is allowed, or not.
+
+The configuration file is a YAML file with the following format
+```yaml
+version: VERSION_NUMBER
+
+configurations:
+  catalog:
+    type: CATALOG_TYPE
+    conf: SOME_CONFIGURATION
+  writers:
+    csv:
+      type: csv
+        conf:
+          enabled: BOOLEAN
+          OTHER_CONF: values
+    parquet:
+      type: parquet
+        conf:
+          enabled: BOOLEAN
+          OTHER_CONF: values
+#etc...    
+```
+The values that are in all CAPS are to be filled in with appropriate values. At this time there is only one configuration version.
+
+**Example Configuration** 
+
+```yaml
+version: 1
+
+configurations:
+  catalog:
+    type: local
+    conf:
+      location: $HOME/.dataframez
+      name: default_catalog.dfz
+  writers:
+    csv:
+      type: csv
+      conf:
+        path: $HOME/.dataframez
+        allowed: true
+    parquet:
+      type: parquet
+      conf:
+        allowed: false
+```
 
 ##API
 The intent has been to keep the API as simple as possible by minimally extending the pandas API and supporting, for the most part, the same functionality in terms of saving data outputs as is done in pandas.
@@ -77,3 +132,8 @@ import dataframez
 
 asset_list = pd.list_assets()
 ```
+
+## Future Features
+1. Extended support of read/write IO types
+2. Extension to Dask
+3. Extension to pySpark
