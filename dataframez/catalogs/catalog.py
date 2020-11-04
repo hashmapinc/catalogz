@@ -39,6 +39,9 @@ class Catalog:
     def latest_version(self, entry_name: str) -> int:
         raise NotImplementedError()
 
+    def list_assets(self) -> list:
+        raise NotImplementedError()
+
     # ----------- Protected Methods Below ------------- #
 
     def _check_if_registered(self, entry_name: str) -> bool:

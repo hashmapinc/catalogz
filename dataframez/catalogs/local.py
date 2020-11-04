@@ -126,6 +126,14 @@ class Local(Catalog):
             return self._catalog.get(entry_name)['type'].lower() == asset_type
         return True
 
+    def list_assets(self) -> list:
+        """
+        Return a list of all asset names.
+        Returns: list of asset names.
+
+        """
+        return list(self._catalog.keys())
+
     def _load_catalog(self) -> None:
         """Read catalog into memory"""
         catalog_path = os.path.join(self.__location, self.__name)

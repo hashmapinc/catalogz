@@ -86,6 +86,10 @@ class __CatalogReader:
                                                        library='dataframez',
                                                        configuration=value['conf']).read
 
+    @classmethod
+    def list_assets(cls) -> list:
+        return cls.__catalog.get_assets()
+
 
 def __read_from_catalog(entry_name: str, version: int = 0) -> pd.DataFrame:
 
