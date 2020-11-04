@@ -28,6 +28,7 @@ class IO:
     __configuration_path: str = os.path.join(os.getenv("HOME"), '.dataframez/configuration.yml')
 
     def __init__(self, **kwargs):
+        # pylint: disable=unused-argument
         with open(self.__configuration_path, 'r') as stream:
             configuration = yaml.safe_load(stream)['configurations']['catalog']
         self._catalog: Catalog = pf.create(key=configuration['type'],

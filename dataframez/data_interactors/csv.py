@@ -42,7 +42,7 @@ class CSV(IO):
 
         # Read to DataFrame and return
         kwargs['filepath_or_buffer'] = write_config['path_or_buf']
-        print(kwargs)
+
         return pd.read_csv(**kwargs)
 
     # ---------- Reading Capabilities ---------- #
