@@ -1,0 +1,54 @@
+# Modifications © 2020 Hashmap, Inc
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+stages:
+  - test
+  - test_deploy
+  - prod_deploy
+
+test:
+  stage: test
+  image: python:3.7.7-buster
+  script:
+    - pip install -r requirements.txt
+    - pip install nose2 coverage prospector
+    - nose2 tests
+    - prospector
+    - coverage run -m nose2 && coverage report -m
+#    - bash <(curl -s https://codecov.io/bash)
+
+test_deploy:
+  stage: test_deploy
+  image: python:3.7.7-buster
+  script:
+    - rm -rf dist
+    - pip install -r requirements.txt
+    - pip install twine
+    - python setup.py sdist
+    - twine upload --verbose -u $PYPIUN -p $PYPIPSWD --repository-url https://test.pypi.org/legacy/ dist/*
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+
+prod_deploy:
+  stage: prod_deploy
+  image: python:3.7.7-buster
+  script:
+    - rm -rf dist
+    - pip install -r requirements.txt
+    - pip install twine
+    - python setup.py sdist
+    - twine upload --verbose -u $PYPIUN_PROD -p $PYPIPSWD_PROD dist/*
+  only:
+    refs:
+      - master
