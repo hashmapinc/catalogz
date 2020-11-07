@@ -24,6 +24,7 @@ class Catalog:
     _catalog: dict
 
     def __init__(self, **kwargs):
+        # pylint: disable=unused-argument
         # Regardless of class, the in-memory component must be loaded.
         self._load_catalog()
 
