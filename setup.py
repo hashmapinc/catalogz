@@ -19,7 +19,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="dataframez",
-    version="0.0.2.0",
+    version="0.0.2.1",
     author="Hashmap, Inc",
     author_email="accelerators@hashmapinc.com",
     description="DO NOT USE - This is a sample program",

@@ -13,6 +13,8 @@
 # limitations under the License.
 import logging
 import os
+from sys import platform
+
 from providah.factories.package_factory import PackageFactory as pf
 import pandas as pd
 import yaml
@@ -25,7 +27,10 @@ import yaml
 class CatalogWriter:
     """Extends pandas DataFrame to write to a cataloged persistent storage."""
     __logger = logging.getLogger()
-    __configuration_path: str = os.path.join(os.getenv("HOME"), '.dataframez/configuration.yml')
+    if platform.lower() != 'windows':
+        __configuration_path: str = os.path.join(os.getenv("HOME"), '.dataframez/configuration.yml')
+    else:
+        __configuration_path: str = os.path.join(os.getenv("USERPROFILE"), '.dataframez/configuration.yml')
     __writers: dict = {}
 
     def __init__(self, df: pd.DataFrame):
