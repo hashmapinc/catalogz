@@ -13,6 +13,7 @@
 # limitations under the License.
 import logging
 import os
+from sys import platform
 
 import pandas as pd
 import yaml
@@ -32,8 +33,10 @@ class __CatalogReader:
     # Application logger instance
     __logger = logging.getLogger()
     # Path to configuration file.
-    __configuration_path: str = os.path.join(os.getenv("HOME"), '.dataframez/configuration.yml')
-
+    if platform.lower() != 'windows':
+        __configuration_path: str = os.path.join(os.getenv("HOME"), '.dataframez/configuration.yml')
+    else:
+        __configuration_path: str = os.path.join(os.getenv("USERPROFILE"), '.dataframez/configuration.yml')
     @classmethod
     def __initialize(cls):
 
