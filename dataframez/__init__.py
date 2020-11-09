@@ -14,7 +14,7 @@
 from sys import platform
 
 import yaml
-from dataframez.read_from_catalog import __read_from_catalog
+from dataframez.read_from_catalog import __read_from_catalog, __list_assets
 import os
 import pandas as pd
 import providah.factories.package_factory as pf
@@ -50,3 +50,5 @@ if not os.path.exists(config_path):
 
 # Add ability to read from pandas
 pd.from_catalog = __read_from_catalog
+
+pd.list_assets = __list_assets

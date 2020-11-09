@@ -91,9 +91,13 @@ class __CatalogReader:
 
     @classmethod
     def list_assets(cls) -> list:
-        return cls.__catalog.get_assets()
+        return cls.__catalog.list_assets()
 
 
 def __read_from_catalog(entry_name: str, version: int = 0) -> pd.DataFrame:
 
     return __CatalogReader.read(entry_name=entry_name, version=version)
+
+
+def __list_assets() -> list:
+    return __CatalogReader.list_assets()

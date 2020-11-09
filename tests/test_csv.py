@@ -27,3 +27,5 @@ class TestWriteCSV(TestCase):
         df2 = pd.from_catalog(entry_name='test_data_csv')
 
         self.assertDictEqual(df.to_dict(), df2.to_dict())
+
+        pd.list_assets()
