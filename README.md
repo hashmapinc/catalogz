@@ -79,6 +79,7 @@ configurations:
       conf:
         allowed: false
 ```
+For Windows user: use $USERPROFILE instead of $HOME variable
 
 ##API
 The intent has been to keep the API as simple as possible by minimally extending the pandas API and supporting, for the most part, the same functionality in terms of saving data outputs as is done in pandas.
