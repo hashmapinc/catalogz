@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from sys import platform
+import platform
 
 import yaml
 from dataframez.read_from_catalog import __read_from_catalog, __list_assets
@@ -22,13 +22,14 @@ import providah.factories.package_factory as pf
 # Fill class registry
 pf.PackageFactory.fill_registry()
 
-# Create configuration
-config_path = os.path.join(os.getenv("HOME"), ".dataframez/configuration.yml")
-
 # Set the path to the default configuration
-if platform.lower() != 'windows':
+if platform.system().lower() != 'windows':
+    # Create configuration
+    config_path = os.path.join(os.getenv("HOME"), ".dataframez/configuration.yml")
     default_config_path: str = os.path.join(os.path.dirname(__file__), 'configurations/default_configuration.yml')
 else:
+    # Create configuration
+    config_path = os.path.join(os.getenv("USERPROFILE"), ".dataframez/configuration.yml")
     default_config_path: str = os.path.join(os.path.dirname(__file__), 'configurations/default_configuration_windows.yml')
 
 #  If the configuration path does not exist - then a default configuration will be created

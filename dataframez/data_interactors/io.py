@@ -15,7 +15,7 @@ import logging
 import pandas as pd
 import os
 import yaml
-from sys import platform
+import platform
 from providah.factories.package_factory import PackageFactory as pf
 
 from dataframez.catalogs.catalog import Catalog
@@ -26,7 +26,7 @@ from dataframez.catalogs.catalog import Catalog
 class IO:
     """Base class for IO operations for data persistence."""
     _logger = logging.getLogger()
-    if platform.lower() != 'windows':
+    if platform.system().lower() != 'windows':
         __configuration_path: str = os.path.join(os.getenv("HOME"), '.dataframez/configuration.yml')
     else:
         __configuration_path: str = os.path.join(os.getenv("USERPROFILE"), '.dataframez/configuration.yml')
