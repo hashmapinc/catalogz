@@ -26,10 +26,7 @@ from dataframez.catalogs.catalog import Catalog
 class IO:
     """Base class for IO operations for data persistence."""
     _logger = logging.getLogger()
-    if platform.system().lower() != 'windows':
-        __configuration_path: str = os.path.join(os.getenv("HOME"), '.dataframez/configuration.yml')
-    else:
-        __configuration_path: str = os.path.join(os.getenv("USERPROFILE"), '.dataframez/configuration.yml')
+    __configuration_path: str = os.path.join(os.getenv("DATAFRAMEZ_HOME"), '.dataframez/configuration.yml')
 
     def __init__(self, **kwargs):
         # pylint: disable=unused-argument

@@ -18,21 +18,21 @@ configurations:
   catalog:
     type: local
     conf:
-      location: $HOME/.dataframez
+      location: $DATAFRAMEZ_HOME/.dataframez
       name: default_catalog.dfz
   writers:
     csv:
       type: csv
       conf:
-        path: $HOME/.dataframez
+        path: $DATAFRAMEZ_HOME/.dataframez
         allowed: true
     parquet:
       type: parquet
       conf:
-        path: $HOME/.dataframez
+        path: $DATAFRAMEZ_HOME/.dataframez
         allowed: true
     pickle:
       type: pickle
       conf:
-        path: $HOME/.dataframez
+        path: $DATAFRAMEZ_HOME/.dataframez
         allowed: true

@@ -12,31 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import platform
+import os
+
+if not os.getenv('DATAFRAMEZ_HOME'):
+    if platform.system().lower() != 'windows':
+        os.environ['DATAFRAMEZ_HOME'] = os.getenv('HOME')
+    else:
+        os.environ['DATAFRAMEZ_HOME'] = os.getenv('USERPROFILE')
 
 import yaml
 from dataframez.read_from_catalog import __read_from_catalog, __list_assets
-import os
+
 import pandas as pd
 import providah.factories.package_factory as pf
 
 # Fill class registry
 pf.PackageFactory.fill_registry()
 
-# Set the path to the default configuration
-if platform.system().lower() != 'windows':
-    # Create configuration
-    config_path = os.path.join(os.getenv("HOME"), ".dataframez/configuration.yml")
-    default_config_path: str = os.path.join(os.path.dirname(__file__), 'configurations/default_configuration.yml')
-else:
-    # Create configuration
-    config_path = os.path.join(os.getenv("USERPROFILE"), ".dataframez/configuration.yml")
-    default_config_path: str = os.path.join(os.path.dirname(__file__), 'configurations/default_configuration_windows.yml')
+# Create configuration
+config_path = os.path.join(os.getenv("DATAFRAMEZ_HOME"), ".dataframez/configuration.yml")
+default_config_path: str = os.path.join(os.path.dirname(__file__), 'configurations/default_configuration.yml')
 
 #  If the configuration path does not exist - then a default configuration will be created
 if not os.path.exists(config_path):
 
     # Set the path for the default configuration if it does not exist
-    catalog_location = os.path.join(os.getenv("HOME"), ".dataframez")
+    catalog_location = os.path.join(os.getenv("DATAFRAMEZ_HOME"), ".dataframez")
     if not os.path.exists(catalog_location):
         os.mkdir(catalog_location)
 

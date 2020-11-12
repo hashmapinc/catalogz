@@ -33,10 +33,8 @@ class __CatalogReader:
     # Application logger instance
     __logger = logging.getLogger()
     # Path to configuration file.
-    if platform.system().lower() != 'windows':
-        __configuration_path: str = os.path.join(os.getenv("HOME"), '.dataframez/configuration.yml')
-    else:
-        __configuration_path: str = os.path.join(os.getenv("USERPROFILE"), '.dataframez/configuration.yml')
+    __configuration_path: str = os.path.join(os.getenv("DATAFRAMEZ_HOME"), '.dataframez/configuration.yml')
+
     @classmethod
     def __initialize(cls):
 

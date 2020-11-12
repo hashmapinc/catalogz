@@ -28,4 +28,4 @@ class TestWriteCSV(TestCase):
 
         self.assertDictEqual(df.to_dict(), df2.to_dict())
 
-        pd.list_assets()
+        print(pd.list_assets())

@@ -27,10 +27,7 @@ import yaml
 class CatalogWriter:
     """Extends pandas DataFrame to write to a cataloged persistent storage."""
     __logger = logging.getLogger()
-    if platform.system().lower() != 'windows':
-        __configuration_path: str = os.path.join(os.getenv("HOME"), '.dataframez/configuration.yml')
-    else:
-        __configuration_path: str = os.path.join(os.getenv("USERPROFILE"), '.dataframez/configuration.yml')
+    __configuration_path: str = os.path.join(os.getenv("DATAFRAMEZ_HOME"), '.dataframez/configuration.yml')
     __writers: dict = {}
 
     def __init__(self, df: pd.DataFrame):
