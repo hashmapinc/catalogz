@@ -89,6 +89,7 @@ class __CatalogReader:
 
     @classmethod
     def list_assets(cls) -> list:
+        cls.__initialize()
         return cls.__catalog.list_assets()
 
 
